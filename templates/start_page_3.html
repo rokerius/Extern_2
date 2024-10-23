@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html latg="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погода</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .square-container {
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .square-container:hover {
+            transform: scale(1.05);
+        }
+
+        .long-container {
+            border-radius: 10px;
+            background-color: #e9ecef;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h2, h3 {
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4 md-4">Погода</h1>
+    <form method="POST" class="mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="square-container">
+                    <h2 class="text-center">Город отправления</h2>
+                    <div class="form-group">
+                        <input type="number" name="latitude_1" class="form-control" placeholder="Широта">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" name="longitude_1" class="form-control" placeholder="Долгота">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="city_1" class="form-control" placeholder="Город">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="square-container">
+                    <h2 class="text-center">Город прибытия</h2>
+                    <div class="form-group">
+                        <input type="number" name="latitude_2" class="form-control" placeholder="Широта">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" name="longitude_2" class="form-control" placeholder="Долгота">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="city_2" class="form-control" placeholder="Город">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="long-container">
+                    <button type="submit" class="btn btn-primary btn-block">Найти погоду</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {% if cond_obj_1.error_type == "city_error" or cond_obj_2.error_type == "city_error" %}
+    <div class="alert alert-danger text-center mt-3 mb-4">
+        <strong>Ошибка:</strong> Город не распознан.
+    </div>
+    {% endif %}
+    {% if cond_obj_1.error_type == "lat_error" or cond_obj_2.error_type == "lat_error" %}
+    <div class="alert alert-danger text-center mt-3 mb-4">
+        <strong>Ошибка:</strong> Некорректное значение широты или долготы.
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="square-container">
+                {% if cond_obj_1.locationKey is none%}
+                {% endif %}
+                {% if cond_obj_1.city_name is not none%}
+                <div class="mt-5">
+                    <h2 class="text-center">{{ cond_obj_1.city_name }}</h2>
+                </div>
+                {% endif %}
+
+                {% if cond_obj_1.lat is not none and cond_obj_1.lat != ""
+                    and cond_obj_1.lon is not none and cond_obj_1.lon != ""%}
+                <div class="mt-5">
+                    <h2 class="text-center">Долгота: {{cond_obj_1.lon}}°, Широта: {{ cond_obj_1.lat }}°</h2>
+                </div>
+                {% endif %}
+
+                {% if cond_obj_1.locationKey is not none and condition is not none %}
+                <div class="mt-5">
+                    <h3 class="text-center bold">{{ cond_obj_1.condition_data["WeatherText"] }}</h3>
+                    <h5 class="text-center">Температура: {{ cond_obj_1.condition_data["Temperature"] }}°C</h5>
+                    <h5 class="text-center">Скорость ветра: {{ cond_obj_1.condition_data["WindSpeed"] }} км/ч</h5>
+                    <h5 class="text-center">Средняя влажность: {{ cond_obj_1.condition_data["AverageHumidity"] }}%</h5>
+                    <h5 class="text-center">Атмосферное давление: {{ cond_obj_1.condition_data["Pressure"] * 100 }} Па</h5>
+                </div>
+                <div class="mt-5">
+                    <h5 class="text-center">Экспертная оценка: {{ cond_obj_1.my_rate }}</h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="square-container">
+                {% if cond_obj_2.city_name is not none%}
+                <div class="mt-5">
+                    <h2 class="text-center">{{ cond_obj_2.city_name }}</h2>
+                </div>
+                {% endif %}
+
+                {% if cond_obj_2.lat is not none and cond_obj_2.lat != ""
+                    and cond_obj_2.lon is not none and cond_obj_2.lon != "" %}
+                <div class="mt-5">
+                    <h2 class="text-center">Долгота: {{cond_obj_2.lon}}°, Широта: {{cond_obj_2.lat}}°</h2>
+                </div>
+                {% endif %}
+
+                {% if cond_obj_2.locationKey is not none and cond_obj_2.condition is not none %}
+                <div class="mt-5">
+                    <h3 class="text-center bold">{{ cond_obj_2.condition_data["WeatherText"] }}</h3>
+                    <h5 class="text-center">Температура: {{ cond_obj_2.condition_data["Temperature"] }}°C</h5>
+                    <h5 class="text-center">Скорость ветра: {{ cond_obj_2.condition_data["WindSpeed"] }} км/ч</h5>
+                    <h5 class="text-center">Средняя влажность: {{ cond_obj_2.condition_data["AverageHumidity"] }}%</h5>
+                    <h5 class="text-center">Атмосферное давление: {{ cond_obj_2.condition_data["Pressure"] * 100 }} Па</h5>
+                </div>
+                <div class="mt-5">
+                    <h5 class="text-center">Экспертная оценка: {{ cond_obj_2.my_rate }}</h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer class="footer text-center py-4 my-4" >
+    <div class="container">
+        <p class="mb-1"> ЦУ. Проект №2 для экстерната по Python.</p>
+        <p> Веб-сервис по предсказанию погодных условий.</p>
+        <p> Карпов Денис Денисович</p>
+    </div>
+</footer>
+
+</body>
+</html>

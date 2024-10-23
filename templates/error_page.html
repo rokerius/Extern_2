@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .error-container {
+            margin-top: 100px;
+            padding: 40px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .error-title {
+            font-size: 2.5rem;
+            color: #dc3545; /* Bootstrap danger color */
+        }
+        .error-message {
+            font-size: 1.2rem;
+            color: #6c757d; /* Bootstrap muted color */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 error-container text-center">
+            <h1 class="error-title">Произошла ошибка!</h1>
+            <p class="error-message">Не удалось подключиться к API погоды. Скорее всего мы исчерпали 50 запросов в API, к которому требовалось подключится в задании.</p>
+            <a href="https://developer.accuweather.com/" class="btn btn-info mt-4">Страница API</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
